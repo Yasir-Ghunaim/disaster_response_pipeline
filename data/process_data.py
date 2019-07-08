@@ -40,7 +40,7 @@ def clean_data(df):
 def save_data(df, database_filename):
     """Save the passed dataframe to a database file"""
     engine = create_engine('sqlite:///' + database_filename)
-    df.to_sql('InsertTableName', engine, index=False)  
+    df.to_sql('DisasterResponse', engine, index=False)  
 
 
 def main():
