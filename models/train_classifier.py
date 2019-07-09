@@ -88,7 +88,7 @@ def save_model(model, model_filepath):
     """ Save the model as a pickle file """
     pkl_filename = "disaster_response_model.pkl"  
     with open(pkl_filename, 'wb') as file:  
-        pickle.dump(cv, file)
+        pickle.dump(model, file)
 
 
 def main():
