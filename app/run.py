@@ -26,11 +26,11 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///../data/YourDatabaseName.db')
-df = pd.read_sql_table('YourTableName', engine)
+engine = create_engine('sqlite:///../data/DisasterResponse.db')
+df = pd.read_sql_table('DisasterResponse', engine)
 
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/disaster_response_model.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -42,6 +42,18 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
+
+    # get most 10 frequent categories
+    categoryDf = df.drop(columns=["id", "message", "original", "genre"])
+    categoryDf_counts = ((categoryDf.sum()/categoryDf.shape[0]).sort_values(ascending=False))[:10]
+
+    # calculate average used categories for each genre
+    genreDf = df.drop(columns=["id", "message", "original"])
+    genreDf_count = genreDf.groupby("genre").sum().sum(axis=1).astype(float)
+    for i in range(genreDf_count.index.shape[0]):
+        genreLength = genreDf[genreDf["genre"] == genreDf_count.index[i]].shape[0]
+        genreDf_count[i] = genreDf_count[i]/genreLength
+    genreDf_count = genreDf_count.sort_values(ascending=False)
     
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
@@ -63,7 +75,43 @@ def index():
                     'title': "Genre"
                 }
             }
-        }
+        },
+        {
+            'data': [
+                Bar(
+                    x=categoryDf_counts.index,
+                    y=categoryDf_counts.values
+                )
+            ],
+
+            'layout': {
+                'title': 'Most Frequent Categories',
+                'yaxis': {
+                    'title': "Percent (%)"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=genreDf_count.index,
+                    y=genreDf_count.values
+                )
+            ],
+
+            'layout': {
+                'title': 'Average Number of Used Categories per Genre',
+                'yaxis': {
+                    'title': "Average"
+                },
+                'xaxis': {
+                    'title': "Genre"
+                }
+            }
+        },
     ]
     
     # encode plotly graphs in JSON
