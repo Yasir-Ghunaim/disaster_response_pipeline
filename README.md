@@ -19,7 +19,7 @@ The project uses Python version 3 and its standard libraries in addition to some
 2. Run the following command in the app's directory to run your web app.
     `python run.py`
 
-3. Go to http://0.0.0.0:3001/
+3. Go to http://0.0.0.0:3001/ or http://localhost:3001/
 
 ## File Structure
 The project is structured as following:
